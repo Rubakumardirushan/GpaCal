@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPA Calculator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center">GPA CALCULATOR</h1>
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+                <div id="inputContainer"></div>
+                <button onclick="createbox()" class="btn btn-primary btn-block">Add Course</button>
+                <button onclick="gprafind()" class="btn btn-success btn-block">Calculate GPA</button>
+                <h3 id="gpaResult" class="text-center"></h3>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let grade = [];
+        let credit = [];
+        let clikcount = 0;
+
+        function createbox() {
+            const inputContainer = document.getElementById('inputContainer');
+            const selectContainer = document.createElement('div');
+            selectContainer.classList.add('form-group');
+
+            const courseInput = document.createElement('input');
+            courseInput.type = 'text';
+            courseInput.classList.add('form-control');
+            courseInput.placeholder = 'Course Name';
+            selectContainer.appendChild(courseInput);
+
+            const gradeSelect = document.createElement('select');
+            gradeSelect.classList.add('form-control');
+            const gradeOptions = ["Grade", "A+", "A-", "A", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "E", "AB"];
+            for (let option of gradeOptions) {
+                const gradeOption = document.createElement('option');
+                gradeOption.textContent = option;
+                gradeSelect.appendChild(gradeOption);
+            }
+            selectContainer.appendChild(gradeSelect);
+
+            const creditSelect = document.createElement('select');
+            creditSelect.classList.add('form-control');
+            const creditOptions = ["Credit", "3", "2", "1", "4", "5", "6"];
+            for (let option of creditOptions) {
+                const creditOption = document.createElement('option');
+                creditOption.textContent = option;
+                creditSelect.appendChild(creditOption);
+            }
+            selectContainer.appendChild(creditSelect);
+
+            inputContainer.appendChild(selectContainer);
+            clikcount++;
+        }
+
+        function gprafind() {
+            const selectContainers = document.querySelectorAll('#inputContainer .form-group');
+            let totalGradePoints = 0;
+            let totalCredits = 0;
+
+            selectContainers.forEach((container, index) => {
+                const gradeSelect = container.querySelector('select:nth-of-type(1)');
+                const creditSelect = container.querySelector('select:nth-of-type(2)');
+                const selectedGrade = gradeSelect.value;
+                const selectedCredit = creditSelect.value;
+
+                if (selectedGrade !== "Grade" && selectedCredit !== "Credit") {
+                    totalGradePoints += getGradePoints(selectedGrade) * parseInt(selectedCredit);
+                    totalCredits += parseInt(selectedCredit);
+                }
+            });
+
+            if (totalCredits > 0) {
+                const gpa = totalGradePoints / totalCredits;
+                document.getElementById('gpaResult').textContent = "Your GPA is " + gpa.toFixed(2);
+            } else {
+                document.getElementById('gpaResult').textContent = "Please add courses to calculate GPA.";
+            }
+        }
+
+        function getGradePoints(grade) {
+            switch (grade) {
+                case "A+":
+                    return 4.0;
+                case "A":
+                    return 4.0;
+                case "A-":
+                    return 3.7;
+                case "B+":
+                    return 3.3;
+                case "B":
+                    return 3.0;
+                case "B-":
+                    return 2.7;
+                case "C+":
+                    return 2.3;
+                case "C":
+                    return 2.0;
+                case "C-":
+                    return 1.7;
+                case "D+":
+                    return 1.3;
+                case "D":
+                    return 1.0;
+                case "E":
+                    return 0.0;
+                case "AB":
+                    return 0.0;
+                default:
+                    return 0.0;
+            }
+        }
+    </script>
+</body>
+
+</html>
